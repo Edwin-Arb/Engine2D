@@ -1,0 +1,34 @@
+# ---- Build output ----
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+Win32/
+*.obj
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.idb
+*.exp
+*.tlog
+*.log
+*.lastbuildstate
+
+# ---- Visual Studio ----
+.vs/
+*.suo
+*.user
+*.VC.db
+*.VC.opendb
+ipch/
+
+# ---- JetBrains Rider ----
+.idea/
+
+# ---- Claude Code (личные локальные настройки) ----
+.claude/settings.local.json
+
+# ---- SFML (внешняя зависимость, не коммитим — см. README.md) ----
+/SFML/

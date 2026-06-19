@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{63A24580-CDCC-4482-979F-8CD3D03DB2CF}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Repeat_in_C</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <SFMLDllSuffix>-d</SFMLDllSuffix>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <SFMLDllSuffix></SFMLDllSuffix>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SFML\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)\SFML\lib;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-audio.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Components\AActor.cpp" />
+    <ClCompile Include="Source\Components\Base\UActorComponent.cpp" />
+    <ClCompile Include="Source\Components\Base\UPhysicsComponent.cpp" />
+    <ClCompile Include="Source\Components\Base\URenderComponent.cpp" />
+    <ClCompile Include="Source\Components\Base\USceneComponent.cpp" />
+    <ClCompile Include="Source\Components\Collisions\UCircleCollisionComponent.cpp" />
+    <ClCompile Include="Source\Components\Render\UCircleRenderComponent.cpp" />
+    <ClCompile Include="Source\Components\Render\USquareRenderComponent.cpp" />
+    <ClCompile Include="Source\Core\FDemoContext.cpp" />
+    <ClCompile Include="Source\Core\GameMain.cpp" />
+    <ClCompile Include="Source\Core\UWorld.cpp" />
+    <ClCompile Include="Source\Core\Logging\FLog.cpp" />
+    <ClCompile Include="Source\Core\Main.cpp" />
+    <ClCompile Include="Source\Demos\FCameraTransformDemo.cpp" />
+    <ClCompile Include="Source\Demos\FCrossProductDemo.cpp" />
+    <ClCompile Include="Source\Demos\FDotProductDemo.cpp" />
+    <ClCompile Include="Source\Demos\FFieldOfViewDemo.cpp" />
+    <ClCompile Include="Source\Demos\FGravityDemo.cpp" />
+    <ClCompile Include="Source\Demos\IMathDemo.cpp" />
+    <ClCompile Include="Source\Demos\FReflectionDemo.cpp" />
+    <ClCompile Include="Source\Demos\FRotationInertiaDemo.cpp" />
+    <ClCompile Include="Source\Demos\FStartDemo.cpp" />
+    <ClCompile Include="Source\Demos\FSteeringDemo.cpp" />
+    <ClCompile Include="Source\Demos\FTransformDemo.cpp" />
+    <ClCompile Include="Source\Math\FCamera.cpp" />
+    <ClCompile Include="Source\Math\FMatrix3x3.cpp" />
+    <ClCompile Include="Source\Math\FTransform2D.cpp" />
+    <ClCompile Include="Source\Math\FVector2D.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Components\AActor.h" />
+    <ClInclude Include="Source\Components\Base\UActorComponent.h" />
+    <ClInclude Include="Source\Components\Base\UPhysicsComponent.h" />
+    <ClInclude Include="Source\Components\Base\URenderComponent.h" />
+    <ClInclude Include="Source\Components\Base\USceneComponent.h" />
+    <ClInclude Include="Source\Components\Collisions\UCircleCollisionComponent.h" />
+    <ClInclude Include="Source\Components\Collisions\UCollisionComponent.h" />
+    <ClInclude Include="Source\Components\Render\UCircleRenderComponent.h" />
+    <ClInclude Include="Source\Components\Render\USquareRenderComponent.h" />
+    <ClInclude Include="Source\Core\Constants.h" />
+    <ClInclude Include="Source\Core\FDemoContext.h" />
+    <ClInclude Include="Source\Core\GameMain.h" />
+    <ClInclude Include="Source\Core\UWorld.h" />
+    <ClInclude Include="Source\Core\Logging\FLog.h" />
+    <ClInclude Include="Source\Demos\FCameraTransformDemo.h" />
+    <ClInclude Include="Source\Demos\FCrossProductDemo.h" />
+    <ClInclude Include="Source\Demos\FDotProductDemo.h" />
+    <ClInclude Include="Source\Demos\FFieldOfViewDemo.h" />
+    <ClInclude Include="Source\Demos\FGravityDemo.h" />
+    <ClInclude Include="Source\Demos\IMathDemo.h" />
+    <ClInclude Include="Source\Demos\FReflectionDemo.h" />
+    <ClInclude Include="Source\Demos\FRotationInertiaDemo.h" />
+    <ClInclude Include="Source\Demos\FStartDemo.h" />
+    <ClInclude Include="Source\Demos\FSteeringDemo.h" />
+    <ClInclude Include="Source\Demos\FTransformDemo.h" />
+    <ClInclude Include="Source\Math\FCamera.h" />
+    <ClInclude Include="Source\Math\FMatrix3x3.h" />
+    <ClInclude Include="Source\Math\FTransform2D.h" />
+    <ClInclude Include="Source\Math\FVector2D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".clang-format" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <Target Name="CopySFMLDlls" AfterTargets="Build">
+    <ItemGroup>
+      <SFMLDlls Include="$(SolutionDir)SFML\bin\sfml-graphics$(SFMLDllSuffix)-3.dll" />
+      <SFMLDlls Include="$(SolutionDir)SFML\bin\sfml-window$(SFMLDllSuffix)-3.dll" />
+      <SFMLDlls Include="$(SolutionDir)SFML\bin\sfml-system$(SFMLDllSuffix)-3.dll" />
+      <SFMLDlls Include="$(SolutionDir)SFML\bin\sfml-audio$(SFMLDllSuffix)-3.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SFMLDlls)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+</Project>
