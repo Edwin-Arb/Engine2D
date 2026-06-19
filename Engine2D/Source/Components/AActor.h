@@ -99,6 +99,7 @@ public:
 	/** Helper accessor to set world position directly onto Root Component. */
 	void SetActorLocation(const FVector2D& NewLocation);
 
+	/** Returns this actor's display name. */
 	const std::string& GetName() const { return ActorName; }
 
 	/** Binds this actor to the world that owns it (set by UWorld::SpawnActor). */
@@ -108,12 +109,13 @@ public:
 	UWorld* GetWorld() const { return World; }
 
 private:
+	/** Human-readable name of this actor. */
 	std::string ActorName;
 
-	/** Flattened array managing the structural lifetime allocation of sub-components. */
+	/** Owns the lifetime of every component attached to this actor. */
 	std::vector<std::unique_ptr<UActorComponent>> OwnedComponents;
 
-	/** Primary spatial anchor reference evaluating world matrix positions. */
+	/** Root scene component that defines this actor's transform in the world. */
 	USceneComponent* RootComponent = nullptr;
 
 	/** Non-owning back-pointer to the world that spawned this actor. */

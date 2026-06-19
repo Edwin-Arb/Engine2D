@@ -6,6 +6,7 @@
 
 UPhysicsComponent::UPhysicsComponent()
 {
+	// Physics needs a per-frame update, so opt this component into ticking.
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
@@ -13,6 +14,7 @@ void UPhysicsComponent::TickComponent(float InDeltaTime)
 {
 	UActorComponent::TickComponent(InDeltaTime);
 
+	// Physics integration requires an owning actor with a movable root component.
 	AActor* ActorOwner = GetOwner();
 	if (!ActorOwner)
 	{
@@ -25,26 +27,27 @@ void UPhysicsComponent::TickComponent(float InDeltaTime)
 		return;
 	}
 
+	// A non-positive mass would make acceleration undefined (division by zero).
 	if (Mass <= 0.0f)
 	{
 		return;
 	}
 
-	// 1. Calculate semi-implicit Euler integration mechanics
+	// 1. Semi-implicit Euler integration: derive acceleration from F = m * a.
 	FVector2D Acceleration = AccumulatedForce / Mass;
 
-	// Update velocity based on acceleration output over time sequence
+	// Integrate acceleration into velocity over this frame's time step.
 	Velocity += Acceleration * InDeltaTime;
 
-	// 2. Apply environmental atmospheric drag damping mechanics
+	// 2. Apply linear damping (drag), scaled by the time step so it is frame-rate independent.
 	Velocity *= std::pow(LinearDamping, InDeltaTime);
 
-	// 3. Translate spatial location updates directly into the NodeTransform layer
+	// 3. Integrate velocity into the root component's world position.
 	FVector2D CurrentPos = Root->GetComponentLocation();
 	FVector2D NewPos = CurrentPos + Velocity * InDeltaTime;
 	Root->SetWorldLocation(NewPos);
 
-	// 4. Reset force accumulator cache buffer for the subsequent frame graph
+	// 4. Clear the accumulated force so it does not carry over into the next frame.
 	AccumulatedForce = { 0.0f, 0.0f };
 }
 

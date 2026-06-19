@@ -23,6 +23,7 @@ void UWorld::DestroyActor(AActor* ActorToDestroy)
 
 void UWorld::RegisterAllActors()
 {
+	// Registration phase: let every actor's components hook into world systems.
 	for (const auto& Actor : Actors)
 	{
 		if (Actor)
@@ -34,6 +35,7 @@ void UWorld::RegisterAllActors()
 
 void UWorld::BeginPlay()
 {
+	// Fire the gameplay-start event across all actors once the world is set up.
 	for (const auto& Actor : Actors)
 	{
 		if (Actor)
@@ -45,6 +47,7 @@ void UWorld::BeginPlay()
 
 void UWorld::Tick(float InDeltaTime)
 {
+	// Advance the simulation one step by ticking every actor.
 	for (const auto& Actor : Actors)
 	{
 		if (Actor)
@@ -56,6 +59,7 @@ void UWorld::Tick(float InDeltaTime)
 
 void UWorld::AddRenderComponent(URenderComponent* InComponent)
 {
+	// Called from URenderComponent::OnRegister to join the draw list.
 	if (InComponent)
 	{
 		RenderComponents.push_back(InComponent);
@@ -64,5 +68,6 @@ void UWorld::AddRenderComponent(URenderComponent* InComponent)
 
 void UWorld::RemoveRenderComponent(URenderComponent* InComponent)
 {
+	// Called from URenderComponent::OnUnregister to leave the draw list.
 	std::erase(RenderComponents, InComponent);
 }

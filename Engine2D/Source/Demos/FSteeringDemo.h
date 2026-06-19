@@ -3,7 +3,7 @@
 #include "IMathDemo.h"
 
 /**
- * Calculates continuous rotational correction forces to guide an object's orientation toward a target.
+ * Smoothly rotates the square to face the target each frame (steering toward a heading).
  */
 class FSteeringDemo : public IMathDemo
 {
@@ -12,6 +12,9 @@ public:
 	std::string GetDemoName() const override { return "Steering Demo | Smooth Rotation Towards Target"; }
 
 private:
+	/** Multiplier on the angle error: higher turns more aggressively toward the target. */
 	const float TurnBoostFactor = 5.0f;
+
+	/** Base rotation speed in degrees per second. */
 	const float SquareRotationSpeed = 180.0f;
 };

@@ -11,6 +11,7 @@
 
 void FReflectionDemo::Enter(FDemoContext& InContext)
 {
+	// Reset cached state before the default scene setup runs.
 	ReflectionLines.clear();
 
 	bHasHit = false;
@@ -29,6 +30,7 @@ void FReflectionDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 
 	SavedFont = InContext.Font;
 
+	// The incident ray points along the square's forward direction.
 	const float SquareRot = InContext.MainSquare->GetComponentRotation();
 	const FVector2D SquarePos = InContext.MainSquare->GetComponentLocation();
 	const FVector2D CirclePos = InContext.MainCircle->GetComponentLocation();
@@ -36,6 +38,7 @@ void FReflectionDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 	const FVector2D IncidentRay = FVector2D::GetForwardVector(SquareRot);
 	SavedIncidentRay = IncidentRay;
 
+	// Start the ray at the square's edge (not its center) and cast it at the circle.
 	const float Offset = SQUARE_SIZE_X / 2.0f;
 	const FVector2D ReflectionRayStart = SquarePos + (IncidentRay * Offset);
 	FVector2D ReflectionRayEnd;
@@ -51,12 +54,14 @@ void FReflectionDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 		const FVector2D HitPoint = ReflectionRayStart + (IncidentRay * T);
 		ReflectionRayEnd = HitPoint;
 
+		// On a circle, the surface normal at the hit point is the direction from the center outward.
 		const FVector2D Normal = HitPoint - MirrorCenter;
 		if (Normal.Length() > EPSILON)
 		{
 			SavedReflectionNormal = Normal.Normalized();
 		}
 
+		// Reflect the incident ray about that normal (R = I - 2*(I.N)*N, done inside Reflect).
 		SavedReflectedRay = IncidentRay.Reflect(SavedReflectionNormal);
 		const FVector2D ReflectedRayEnd = HitPoint + (SavedReflectedRay * RayLength);
 
@@ -73,12 +78,14 @@ void FReflectionDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 	}
 	else
 	{
+		// No hit: draw the incident ray at full length and nothing else.
 		bHasHit = false;
 		ReflectionRayEnd = ReflectionRayStart + IncidentRay * RayLength;
 		ReflectionLines.emplace_back(sf::Vector2f(ReflectionRayStart.X, ReflectionRayStart.Y), sf::Color::Red);
 		ReflectionLines.emplace_back(sf::Vector2f(ReflectionRayEnd.X, ReflectionRayEnd.Y), sf::Color::Red);
 	}
 
+	// Cache the dot product and incidence angle for the on-screen HUD.
 	SavedDotProduct = SavedIncidentRay.DotProduct(SavedReflectionNormal);
 	const float AngleWithNormal = std::acos(std::clamp(std::abs(SavedDotProduct), 0.0f, 1.0f));
 	SavedIncidenceAngle = 90.0f - FVector2D::RadianToDegree(AngleWithNormal);
@@ -91,7 +98,7 @@ void FReflectionDemo::Render(sf::RenderWindow& InWindow, const FMatrix3x3& InVie
 		return;
 	}
 
-	// Apply view matrix transforms onto structural lines to support active viewport manipulations cleanly
+	// Draw the ray lines in world space by applying the camera view matrix.
 	sf::RenderStates LineStates;
 	LineStates.transform = InViewMatrix.ToSFMLTransform();
 	InWindow.draw(ReflectionLines.data(), ReflectionLines.size(), sf::PrimitiveType::Lines, LineStates);
@@ -116,7 +123,7 @@ void FReflectionDemo::Render(sf::RenderWindow& InWindow, const FMatrix3x3& InVie
 		return Text;
 	};
 
-	// Draw Canvas HUD Analytics Overlay (Screen Space Static Elements)
+	// HUD overlay (screen space): legend plus the live reflection numbers.
 	InWindow.draw(CreateText(
 		"White: Square Direction | Red: Incident Ray (I) | Green: Reflected Ray (R)\nBlue: Normal (N) | Yellow: Mirror | Use WASD to rotate square", 16, sf::Color::White, { 10.0f, 40.0f }));
 	InWindow.draw(CreateText("Formula: R = I - 2 * (I . N) * N", 16, sf::Color::Cyan, { 10.0f, 80.0f }));
@@ -137,12 +144,15 @@ void FReflectionDemo::Render(sf::RenderWindow& InWindow, const FMatrix3x3& InVie
 
 bool FReflectionDemo::RayCircleIntersection(const FVector2D& InRayStart, const FVector2D& InRayDir, const FVector2D& InCircleCenter, float InRadius, float& InOutT)
 {
+	// Substituting the ray P(t) = start + t*dir into |P - center|^2 = r^2 yields the
+	// quadratic A*t^2 + B*t + C = 0 with the coefficients below.
 	const FVector2D CenterToRayStart = InRayStart - InCircleCenter;
 
 	const float A = InRayDir.DotProduct(InRayDir);
 	const float B = 2.0f * CenterToRayStart.DotProduct(InRayDir);
 	const float C = CenterToRayStart.DotProduct(CenterToRayStart) - (InRadius * InRadius);
 
+	// A negative discriminant means the ray's line misses the circle entirely.
 	const float Discriminant = B * B - 4.0f * A * C;
 
 	if (Discriminant < 0.0f)
@@ -150,6 +160,7 @@ bool FReflectionDemo::RayCircleIntersection(const FVector2D& InRayStart, const F
 		return false;
 	}
 
+	// Two roots: T1 is the nearer one. Pick the closest intersection in front of the ray.
 	const float SqrtD = std::sqrt(Discriminant);
 	const float T1 = (-B - SqrtD) / (2.0f * A);
 	const float T2 = (-B + SqrtD) / (2.0f * A);
@@ -164,6 +175,7 @@ bool FReflectionDemo::RayCircleIntersection(const FVector2D& InRayStart, const F
 	}
 	else
 	{
+		// Both intersections are behind the ray start.
 		return false;
 	}
 

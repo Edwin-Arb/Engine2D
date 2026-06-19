@@ -62,6 +62,8 @@ void FTransformDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 		return;
 	}
 
+	// Ripple rotation down the chain: each link eases toward the previous link's angle,
+	// so a turn at the root propagates outward with a trailing, whip-like delay.
 	float CurrentParentRot = InContext.MainSquare->GetRelativeRotation();
 
 	for (AActor* Actor : DemoActors)

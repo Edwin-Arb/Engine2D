@@ -23,56 +23,61 @@ GameMain::GameMain()
 	// ============================================================================
 	// 1. Player
 	// ============================================================================
-	// Primary Actor Primitives Allocation & Registration
-	// Allocate main operational square geometric primitive and center within baseline screen space
+	// Spawn the player square and center it on screen.
 	AActor* PlayerActor = World.SpawnActor<AActor>("PlayerSquareActor");
 	MainSquareComponent = PlayerActor->CreateComponent<USquareRenderComponent>(FVector2D(SQUARE_SIZE_X, SQUARE_SIZE_Y));
 	PlayerActor->SetActorLocation({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f });
 
-	// Attach physics core directly into the primary player framework
+	// Give the player physics (mass + damping) so it responds to forces.
 	MainSquarePhysicsComponent = PlayerActor->CreateComponent<UPhysicsComponent>();
 	MainSquarePhysicsComponent->SetMass(5.0f);
 	MainSquarePhysicsComponent->SetLinearDamping(0.3f);
 
-	// We bind the collision to the square's visual component
+	// Add a collider and attach it to the square so it follows the visual.
 	MainSquareCollisionComponent = PlayerActor->CreateComponent<UCircleCollisionComponent>(SQUARE_SIZE_X * 0.5f);
 
-	// We reset the local collision position so that it is centered exactly within the square
+	// Zero the relative offset so the collider stays centered on the square.
 	MainSquareCollisionComponent->SetRelativeLocation({ 0.0f, 0.0f });
 	MainSquareCollisionComponent->AttachToComponent(MainSquareComponent);
 
 	// ============================================================================
 	// 2. Static target ring
 	// ============================================================================
-	// Allocate target orientation circle primitive and mirror identical baseline layout positioning
+	// Spawn the target circle at the same center position.
 	AActor* MainCir = World.SpawnActor<AActor>("MainCircleActor");
 	MainCircleComponent = MainCir->CreateComponent<UCircleRenderComponent>(CIRCLE_RADIUS);
 	MainCircleComponent->SetWorldLocation({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f });
 
 	MainCircleCollisionComponent = MainCir->CreateComponent<UCircleCollisionComponent>(CIRCLE_RADIUS);
 
-	// We bind the circle's collision to its visual component
+	// Attach the circle's collider to its visual component.
 	MainCircleCollisionComponent->SetRelativeLocation({ 0.0f, 0.0f });
 	MainCircleCollisionComponent->AttachToComponent(MainCircleComponent);
 
-	// Relative Attachment Hierarchies & Spatial Constraints
-	// Establish directional layout indicator primitive tracking context
+	// ============================================================================
+	// 3. Direction indicator (child of the square)
+	// ============================================================================
+	// A small marker that shows which way the square is facing.
 	AActor* IndicatorActor = World.SpawnActor<AActor>("DirectionIndicatorActor");
 	DirectionIndicatorComponent = IndicatorActor->CreateComponent<UCircleRenderComponent>(SQUARE_SIZE_X * 0.05f);  // 5% of the main square size
 	DirectionIndicatorComponent->SetColor(sf::Color::Yellow);
 
-	// Attach directional node rigidly onto the primary square transformation space hierarchy
+	// Parent it to the square so it rotates/moves with the square, offset to one side.
 	DirectionIndicatorComponent->AttachToComponent(MainSquareComponent);
 	constexpr float OffsetDistance = SQUARE_SIZE_X / 2.0f;
 	DirectionIndicatorComponent->SetRelativeLocation({ OffsetDistance, 0.0f });
 
-	// 3. Viewport Coordinate Projection Camera Configurations
-	// Initialize main tracking framework viewport camera components parameters
+	// ============================================================================
+	// 4. Camera
+	// ============================================================================
+	// Create the camera and center it on the scene.
 	CameraComponent = std::make_unique<FCamera>();
 	CameraComponent->TransformComponent.SetPosition({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f });
 
-	// 4. State Machine Registry Mapping& Initial Environment Launch
-	// Populate state allocation directories with concrete mathematical execution routines
+	// ============================================================================
+	// 5. Demo registry
+	// ============================================================================
+	// Register one demo instance per math mode.
 	DemoRegistry.emplace(EMathDemo::EMD_DotProduct, std::make_unique<FDotProductDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_CrossProduct, std::make_unique<FCrossProductDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_Steering, std::make_unique<FSteeringDemo>());
@@ -84,25 +89,27 @@ GameMain::GameMain()
 	DemoRegistry.emplace(EMathDemo::EMD_Gravity, std::make_unique<FGravityDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_None, std::make_unique<FStartDemo>());
 
-	// Seed current system mode properties and pull raw entry state pointer address maps
+	// Start on the "None"/start demo and cache its pointer as the active demo.
 	CurrentMathMode = EMathDemo::EMD_None;
 	ActiveDemo = DemoRegistry[EMathDemo::EMD_None].get();
 }
 
 void GameMain::InitGame()
 {
+	// The font is required for all on-screen text, so a load failure is fatal.
 	if (!Font.openFromFile("Font/PFAgoraSlabPro Bold.ttf"))
 	{
 		throw std::runtime_error("Failed to load critical typography layout resource: Font/PFAgoraSlabPro Bold.ttf");
 	}
 
+	// Publish shared references into the context the demos read from.
 	GlobalContext.Font = &Font;
 	GlobalContext.MainSquare = MainSquareComponent;
 	GlobalContext.MainCircle = MainCircleComponent;
 	GlobalContext.DirectionIndicator = DirectionIndicatorComponent;
 	GlobalContext.CameraTransform = &CameraComponent->TransformComponent;
 
-	// Configure performance metrics graphics primitives visual definitions
+	// Configure the on-screen FPS text.
 	FpsText.setCharacterSize(20);
 	FpsText.setFillColor(sf::Color::Green);
 	FpsText.setPosition(FVector2D(10.0f, SCREEN_HEIGHT - 35.0f));
@@ -127,7 +134,7 @@ void GameMain::HandleInput()
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 		InputDirection.Y += 1.0f;
 
-	// Instantly re-align geometry orientation directly tracing down vector alignment onto the Circle target
+	// Press R to instantly rotate the square to face the target circle.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
 	{
 		const FVector2D SquarePos = MainSquareComponent->GetComponentLocation();
@@ -144,7 +151,7 @@ void GameMain::HandleInputSwitchMode()
 	const bool bLeftArrowCurrentPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left);
 	const bool bRightArrowCurrentPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right);
 
-	// Edge-triggered switch state parsing tracking: Evaluate operations only on unique positive keystrokes
+	// Edge-triggered: act only on the frame a key transitions from released to pressed.
 	if (bLeftArrowCurrentPressed && !bLeftArrowPressed)
 	{
 		int32_t CurrentMode = static_cast<int32_t>(CurrentMathMode);
@@ -238,15 +245,15 @@ void GameMain::Movement(float InDeltaTime)
 
 void GameMain::Update(const sf::RenderWindow& InWindow, float InDeltaTime)
 {
-	// Cache active mouse cursor layout dimensions in local screen space maps
+	// Read the mouse cursor position (screen space) and share it via the context.
 	MousePosition = { static_cast<float>(sf::Mouse::getPosition(InWindow).x), static_cast<float>(sf::Mouse::getPosition(InWindow).y) };
 	GlobalContext.MousePosition = MousePosition;
 
-	// We read keystrokes and populate the InputDirection
+	// Read keyboard state into InputDirection and share it via the context.
 	HandleInput();
 	GlobalContext.InputDirection = InputDirection;
 
-	// Skip standard kinematic simulation steps during camera relative space isolation modes
+	// The camera-transform demo drives the square itself, so skip normal movement there.
 	if (CurrentMathMode != EMathDemo::EMD_CameraTransform)
 	{
 		Movement(InDeltaTime);
@@ -254,10 +261,10 @@ void GameMain::Update(const sf::RenderWindow& InWindow, float InDeltaTime)
 
 	HandleInputSwitchMode();
 
-	// We are refreshing all entities in the world
+	// Advance every actor (and thus every component) in the world.
 	World.Tick(InDeltaTime);
 
-	// ============================================================================
+	// ===== Collision resolution: player square vs. target circle =================
 	if (MainSquareCollisionComponent && MainCircleCollisionComponent)
 	{
 		FVector2D CollisionNormal;
@@ -295,7 +302,7 @@ void GameMain::Update(const sf::RenderWindow& InWindow, float InDeltaTime)
 	}
 	// ============================================================================
 
-	// Environmental Constraints Stage (Hard Screen Clamping)
+	// Keep the square inside the screen bounds (hard clamp).
 	if (MainSquareComponent && MainSquarePhysicsComponent)
 	{
 		FVector2D Pos = MainSquareComponent->GetComponentLocation();
@@ -338,7 +345,7 @@ void GameMain::Update(const sf::RenderWindow& InWindow, float InDeltaTime)
 		ActiveDemo->Tick(InDeltaTime, GlobalContext);
 	}
 
-	// Process frame tracking telemetry pipelines
+	// Update the FPS readout, refreshing the displayed value every FpsUpdateInterval.
 	FpsCounter += 1.0f;
 	FpsUpdateTimer += InDeltaTime;
 
@@ -356,7 +363,7 @@ void GameMain::Render(sf::RenderWindow& InWindow)
 {
 	const FMatrix3x3 ViewMatrix = CameraComponent->GetViewMatrix();
 
-	// 1. Process standard flat geometric canvas layers using resolved view spaces
+	// 1. Draw every registered render component through the camera's view matrix.
 	for (URenderComponent* RenderComp : World.GetRenderComponents())
 	{
 		if (RenderComp)
@@ -365,7 +372,7 @@ void GameMain::Render(sf::RenderWindow& InWindow)
 		}
 	}
 
-	// 2. Cascade state-specific debugging lines and overlays (rays, grids, cone shapes)
+	// 2. Let the active demo draw its own overlays (rays, grids, cones) and its name.
 	if (ActiveDemo)
 	{
 		ActiveDemo->Render(InWindow, ViewMatrix);
@@ -382,16 +389,18 @@ void GameMain::Render(sf::RenderWindow& InWindow)
 
 void GameMain::ChangeMode(EMathDemo InNewMode)
 {
+	// Already in this mode - nothing to switch.
 	if (CurrentMathMode == InNewMode)
 	{
 		return;
 	}
 
-	// Flush camera positions back to center baseline profiles prior to swapping runtime modules
+	// Reset the camera to its default pose so each demo starts from a clean view.
 	CameraComponent->TransformComponent.SetPosition({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f });
 	CameraComponent->TransformComponent.SetRotation(0.0f);
 	CameraComponent->TransformComponent.SetScale({ 1.0f, 1.0f });
 
+	// Let the outgoing demo clean up before the new one takes over.
 	if (ActiveDemo)
 	{
 		ActiveDemo->Exit(GlobalContext);

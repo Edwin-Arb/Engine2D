@@ -7,7 +7,7 @@ void FCameraTransformDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 {
 	FTransform2D* CameraTransformComp = InContext.CameraTransform;
 
-	// Reset spatial transforms instantly back to baseline default parameters on Space-bar input
+	// Space resets the camera to its default position, rotation, and zoom.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
 	{
 		CameraTransformComp->SetPosition({ SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f });
@@ -29,7 +29,7 @@ void FCameraTransformDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 
 	if (CamInput.Length() > EPSILON)
 	{
-		// Normalize inputs to maintain fixed constant speed vectors over oblique axes
+		// Normalize so diagonal movement isn't faster than axis-aligned movement.
 		FVector2D NewPos = CameraTransformComp->GetRelativePosition() + CamInput.Normalized() * Speed * InDeltaTime;
 		CameraTransformComp->SetPosition(NewPos);
 	}
@@ -60,13 +60,14 @@ void FCameraTransformDemo::HandleEvent(const sf::Event& InEvent, FDemoContext& I
 	{
 		if (MouseWheel->wheel == sf::Mouse::Wheel::Vertical)
 		{
+			// Scrolling up zooms in (smaller scale), scrolling down zooms out.
 			const float ZoomDelta = MouseWheel->delta > 0 ? -ZoomSpeed : ZoomSpeed;
 			FVector2D CamScale = InContext.CameraTransform->GetRelativeScale();
 
 			CamScale.X += ZoomDelta;
 			CamScale.Y += ZoomDelta;
 
-			// Enforce bounding limits onto scale dimensions
+			// Clamp the zoom so it stays within the allowed range.
 			CamScale.X = std::max(MinZoom, std::min(MaxZoom, CamScale.X));
 			CamScale.Y = std::max(MinZoom, std::min(MaxZoom, CamScale.Y));
 

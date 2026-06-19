@@ -9,8 +9,9 @@
 #include "../Math/FCamera.h"
 
 class UCollisionComponent;
+
 /**
- * Mathematical calculation modes utilized during active interactive demonstrations.
+ * Identifies which interactive math demo is currently active.
  */
 enum class EMathDemo : int8_t
 {
@@ -27,51 +28,52 @@ enum class EMathDemo : int8_t
 };
 
 /**
- * Main application state controller sub-system.
- * Acts as the master orchestrator handling inputs dispatch, layout simulation updates,
- * camera viewport resolution, state machine switches, and rendering pass generation.
+ * Top-level application controller.
+ * Owns the world and the demo registry, and drives input handling, updates,
+ * camera, demo switching, and rendering each frame.
  */
 class GameMain
 {
 public:
-	/** Allocates base geometry and configures direct relative transformation tree constraints. */
+	/** Spawns the base actors and wires up their transform hierarchy. */
 	GameMain();
 
-	/** Loads external resources and maps default UI context bindings. Throws if critical files are missing. */
+	/** Loads resources and sets up default state. Throws if a critical file is missing. */
 	void InitGame();
 
-	/** Core simulation iteration frame step evaluating inputs and active state behaviors. */
+	/** Per-frame update: processes input and advances the active demo. */
 	void Update(const sf::RenderWindow& InWindow, float InDeltaTime);
 
-	/** Master rendering command pass routing draw operations down onto the screen viewport. */
+	/** Draws the world and the on-screen demo UI. */
 	void Render(sf::RenderWindow& InWindow);
 
-	/** Manages structural lifetime teardowns and initialization states for newly selected modes. */
+	/** Switches to a new demo, tearing down the old one and initializing the new. */
 	void ChangeMode(EMathDemo InNewMode);
 
-	/** Forwards raw OS-level hardware interactions down into active localized demo handlers. */
+	/** Forwards an OS input event to the active demo. */
 	void HandleEvent(const sf::Event& InEvent);
 
-	/** Accessor returning mutable references back to the tracking viewport component transform node. */
+	/** Returns the camera's transform (mutable). */
 	FTransform2D& GetCameraTransform() { return CameraComponent->TransformComponent; }
 
-	/** Accessor tracking the active operational state profile. */
+	/** Returns the currently active demo mode. */
 	EMathDemo GetCurrentMathMode() const { return CurrentMathMode; }
 
 private:
-	/** Polls keyboard states mapping axis thresholds onto displacement vectors. */
+	/** Reads keyboard state and builds the movement input direction. */
 	void HandleInput();
 
-	/** Tracks edge-triggered keystrokes to cycle cleanly between distinct execution profiles. */
+	/** Cycles between demos on edge-triggered arrow key presses. */
 	void HandleInputSwitchMode();
 
-	/** Resolves algorithmic movement translation pipelines including adaptive Arrival target steering. */
+	/** Moves the main square, including the steering "arrival" behavior. */
 	void Movement(float InDeltaTime);
 
 private:
+	/** The scene: owns all actors and the render list. */
 	UWorld World;
 
-	/** Fast-access cache tracking persistent object primitives. */
+	/** Cached non-owning pointers to the persistent demo actors' components. */
 	USquareRenderComponent* MainSquareComponent = nullptr;
 	UCircleRenderComponent* MainCircleComponent = nullptr;
 	UCircleRenderComponent* DirectionIndicatorComponent = nullptr;
@@ -83,27 +85,27 @@ private:
 	/** Collision volume attached to the static/target circle actor. */
 	UCollisionComponent* MainCircleCollisionComponent = nullptr;
 
-	/** Viewport coordinate spaces conversion camera controller component tracking. */
+	/** Camera controller converting world space into screen/view space. */
 	std::unique_ptr<FCamera> CameraComponent = nullptr;
 
-	/** Edge-triggered validation flags tracking sequential mode selection shifts. */
+	/** Edge-trigger flags so arrow keys switch demos once per press, not per frame. */
 	bool bLeftArrowPressed = false;
 	bool bRightArrowPressed = false;
 
-	/** State Machine Context properties. */
+	/** Active demo mode and the registry of available demos. */
 	EMathDemo CurrentMathMode = EMathDemo::EMD_None;
 	FDemoContext GlobalContext;
 	std::unordered_map<EMathDemo, std::unique_ptr<IMathDemo>> DemoRegistry;
 	IMathDemo* ActiveDemo = nullptr;
 
-	/** Active structural screen location tracking constraints properties. */
+	/** Cursor position and current movement input direction. */
 	FVector2D MousePosition;
 	FVector2D InputDirection;
 
-	/** Internal asset typography resources. */
+	/** Font used for on-screen text. */
 	sf::Font Font;
 
-	/** Diagnostic performance monitoring telemetry analytics tracking. */
+	/** FPS counter state for the on-screen performance readout. */
 	int32_t CurrentFps = 0;
 	float FpsCounter = 0.0f;
 	float FpsUpdateTimer = 0.0f;

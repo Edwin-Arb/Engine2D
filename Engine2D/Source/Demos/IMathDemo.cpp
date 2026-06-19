@@ -6,6 +6,8 @@
 
 void IMathDemo::Enter(FDemoContext& InContext)
 {
+	// Default Enter: recenter and reset the shared square/circle so every demo
+	// starts from the same clean state. Demos can override to add their own setup.
 	if (InContext.MainSquare)
 	{
 		InContext.MainSquare->SetRelativeLocation(FVector2D(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f));

@@ -5,6 +5,7 @@
 
 void URenderComponent::SetVisibility(bool bNewVisibility)
 {
+	// Only react when the visibility actually changes, to avoid redundant notifications.
 	if (bIsVisible != bNewVisibility)
 	{
 		bIsVisible = bNewVisibility;
@@ -14,12 +15,13 @@ void URenderComponent::SetVisibility(bool bNewVisibility)
 
 void URenderComponent::Draw(sf::RenderWindow& InWindow, const FMatrix3x3& InViewMatrix)
 {
+	// Invisible components are skipped entirely.
 	if (!bIsVisible)
 	{
 		return;
 	}
 
-	// Concat the camera view matrix with the component's internal transform
+	// Compose world-to-view with local-to-world to get the full model-view transform.
 	FMatrix3x3 FinalMatrix = InViewMatrix * GetComponentToWorld();
 
 	sf::RenderStates States;
@@ -30,6 +32,7 @@ void URenderComponent::Draw(sf::RenderWindow& InWindow, const FMatrix3x3& InView
 
 void URenderComponent::OnRegister()
 {
+	// Join the owning world's render list so this component is drawn each frame.
 	if (AActor* OwnerActor = GetOwner())
 	{
 		if (UWorld* OwningWorld = OwnerActor->GetWorld())
@@ -41,6 +44,7 @@ void URenderComponent::OnRegister()
 
 void URenderComponent::OnUnregister()
 {
+	// Leave the owning world's render list so it stops drawing this component.
 	if (AActor* OwnerActor = GetOwner())
 	{
 		if (UWorld* OwningWorld = OwnerActor->GetWorld())
