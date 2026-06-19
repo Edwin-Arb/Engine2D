@@ -29,11 +29,13 @@ public:
 	 */
 	virtual bool Intersects(UCollisionComponent* InOther, FVector2D& OutNormal, float& OutPenetration) = 0;
 
-	/** Setters and Getters for collision filtering channels. */
+	/** Sets the collision channel used to filter interactions. */
 	void SetCollisionChannel(ECollisionChannel NewChannel) { CollisionChannel = NewChannel; }
+
+	/** Returns this component's collision channel. */
 	ECollisionChannel GetCollisionChannel() const { return CollisionChannel; }
 
 protected:
-	/** Defines how this component filters out tracking sweeps and queries. */
+	/** Collision channel that determines which objects this component interacts with. */
 	ECollisionChannel CollisionChannel = ECollisionChannel::ECC_Pawn;
 };

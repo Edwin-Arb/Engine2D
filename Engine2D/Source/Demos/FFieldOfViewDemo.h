@@ -5,7 +5,8 @@
 #include <vector>
 
 /**
- * Implements a 2D cone visibility algorithm assessing inclusion thresholds inside an angular limit.
+ * Tests whether the target circle falls inside the square's vision cone (a field-of-view
+ * check using angle and distance) and draws the cone.
  */
 class FFieldOfViewDemo : public IMathDemo
 {
@@ -15,12 +16,17 @@ public:
 	std::string GetDemoName() const override { return "Field Of View Demo | Vision Cone Detection"; }
 
 private:
+	/** Line vertices for the two cone edges, rebuilt each Tick and drawn in Render. */
 	std::vector<sf::Vertex> FOVConeVertices;
 
+	/** True when the target is inside the cone this frame. */
 	bool bTargetDetected = false;
+
+	/** Square pose captured in Tick so Render can draw the cone consistently. */
 	float SavedSquareRot = 0.0f;
 	FVector2D SavedSquarePos;
 
+	/** Total field-of-view angle, its half (used for edge angles), and the view range. */
 	const float Fov = 90.0f;
 	const float HalfFov = Fov / 2.0f;
 	const float DetectionDistance = 300.0f;

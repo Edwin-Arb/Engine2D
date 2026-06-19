@@ -2,6 +2,7 @@
 
 void UActorComponent::RegisterComponent()
 {
+	// Guard against double registration: OnRegister must fire exactly once.
 	if (bRegistered)
 	{
 		return;
@@ -13,6 +14,7 @@ void UActorComponent::RegisterComponent()
 
 void UActorComponent::UnregisterComponent()
 {
+	// Only unregister something that is currently registered.
 	if (!bRegistered)
 	{
 		return;

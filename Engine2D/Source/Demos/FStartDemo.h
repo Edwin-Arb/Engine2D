@@ -2,7 +2,7 @@
 
 #include "IMathDemo.h"
 
-/** Default fallback system initialization demo module. */
+/** Idle "no demo selected" placeholder shown on startup; does nothing each tick. */
 class FStartDemo : public IMathDemo
 {
 public:

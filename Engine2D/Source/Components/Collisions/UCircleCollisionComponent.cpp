@@ -9,6 +9,7 @@ UCircleCollisionComponent::UCircleCollisionComponent(float InRadius)
 
 bool UCircleCollisionComponent::Intersects(UCollisionComponent* InOther, FVector2D& OutNormal, float& OutPenetration)
 {
+	// Nothing to test against.
 	if (!InOther)
 	{
 		return false;
@@ -21,45 +22,44 @@ bool UCircleCollisionComponent::Intersects(UCollisionComponent* InOther, FVector
 	// }
 	// auto* OtherCircle = static_cast<UCircleCollisionComponent*>(InOther);
 
-	// Check if the incoming collision component is a Circle
+	// Only circle-vs-circle is supported, so the other shape must also be a circle.
 	UCircleCollisionComponent* OtherCircle = dynamic_cast<UCircleCollisionComponent*>(InOther);
 	if (!OtherCircle)
 	{
 		return false;
 	}
 
-	// 1. Gather global spatial coordinates from transform hierarchy nodes
+	// 1. Read both circles' world-space centers.
 	const FVector2D ThisPos = GetComponentLocation();
 	const FVector2D OtherPos = InOther->GetComponentLocation();
 
-	// 2. Compute directional offset delta vector (Points from Other towards This)
-	// We point it this way so OutNormal can be directly used to push 'This' actor out of 'Other'
+	// 2. Offset from Other to This, so OutNormal can directly push This out of Other.
 	FVector2D Delta = ThisPos - OtherPos;
 	const float DistanceSquared = Delta.DotProduct(Delta);
 
-	// 3. Compute structural radial threshold bounds boundaries
+	// 3. Two circles overlap when the distance between centers is less than the sum of radii.
 	const float RadiiSum = Radius + OtherCircle->GetRadius();
 	const float RadiiSumSquared = RadiiSum * RadiiSum;
 
-	// 4. Perform highly optimized square-distance intersection test pass
+	// 4. Compare squared distances to avoid the sqrt while only testing for overlap.
 	if (DistanceSquared >= RadiiSumSquared)
 	{
-		return false;  // No collision overlap evaluated
+		return false;  // No overlap.
 	}
 
-	// 5. Compute concrete spatial metrics as intersection is validated
+	// 5. Overlap confirmed: now compute the real distance for the normal and penetration.
 	const float Distance = std::sqrt(DistanceSquared);
 
-	// Edge Case Guard: Prevent division by zero if actor center coordinates perfectly overlap
+	// Guard against division by zero when both centers coincide exactly.
 	if (Distance < EPSILON)
 	{
-		// Arbitrary fallback displacement direction vector (Push straight up along Y-axis)
+		// Arbitrary fallback push direction (straight up along -Y).
 		OutNormal = FVector2D(0.0f, -1.0f);
 		OutPenetration = RadiiSum;
 	}
 	else
 	{
-		// Standard calculation: Normalize directional delta offset vector
+		// Normalize the offset to get the push-out direction; penetration is the overlap depth.
 		OutNormal = Delta / Distance;
 		OutPenetration = RadiiSum - Distance;
 	}

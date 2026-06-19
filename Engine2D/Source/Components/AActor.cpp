@@ -7,6 +7,7 @@ AActor::AActor(const std::string& InName)
 
 void AActor::RegisterAllComponents()
 {
+	// Drive OnRegister on every owned component (e.g. render components join the world).
 	for (const auto& Component : OwnedComponents)
 	{
 		if (Component)
@@ -18,6 +19,7 @@ void AActor::RegisterAllComponents()
 
 void AActor::UnregisterAllComponents()
 {
+	// Reverse of RegisterAllComponents: detach every component from the world.
 	for (const auto& Component : OwnedComponents)
 	{
 		if (Component)
@@ -29,6 +31,7 @@ void AActor::UnregisterAllComponents()
 
 void AActor::Tick(float InDeltaTime)
 {
+	// Propagate the per-frame update down to every owned component.
 	for (const auto& Component : OwnedComponents)
 	{
 		if (Component)
@@ -40,6 +43,7 @@ void AActor::Tick(float InDeltaTime)
 
 void AActor::BeginPlay()
 {
+	// Propagate the gameplay-start event down to every owned component.
 	for (const auto& Component : OwnedComponents)
 	{
 		if (Component)
@@ -56,12 +60,13 @@ void AActor::SetRootComponent(USceneComponent* InRootComponent)
 
 FVector2D AActor::GetActorLocation() const
 {
-	// If the actor has a physical body (root), we take the position from there
+	// The actor's location is defined by its root component; fall back to origin if none.
 	return RootComponent ? RootComponent->GetComponentLocation() : FVector2D(0.0f, 0.0f);
 }
 
 void AActor::SetActorLocation(const FVector2D& NewLocation)
 {
+	// Moving the actor means moving its root component in world space.
 	if (RootComponent)
 	{
 		RootComponent->SetWorldLocation(NewLocation);

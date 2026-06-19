@@ -8,18 +8,18 @@
 class UCircleCollisionComponent : public UCollisionComponent
 {
 public:
-	/** Constructor initializing structural geometric radius specifications. */
+	/** Constructs a circle collider with the given radius. */
 	UCircleCollisionComponent(float InRadius);
 
 	~UCircleCollisionComponent() override = default;
 
-	/** Overridden structural evaluation method parsing out shape-specific intersections. */
+	/** Tests this circle against another collision shape (currently circle-vs-circle). */
 	bool Intersects(UCollisionComponent* InOther, FVector2D& OutNormal, float& OutPenetration) override;
 
-	/** Accessor for bounding extents. */
+	/** Returns the circle's radius. */
 	float GetRadius() const { return Radius; }
 
 private:
-	/** Radial size definition boundary of this collision space. */
+	/** Radius of the bounding circle, in world units. */
 	float Radius = 0.0f;
 };

@@ -11,17 +11,17 @@ class UCircleRenderComponent : public URenderComponent
 public:
 	UCircleRenderComponent() = delete;
 
-	/** Initializes the circle primitive state configuration. */
+	/** Constructs a circle with the given radius. */
 	UCircleRenderComponent(float InRadius);
 
-	/** Overrides interface color properties. */
+	/** Sets the circle's fill color. */
 	void SetColor(sf::Color NewColor) override;
 
 protected:
-	/** Renders the localized circle configuration out through the custom pipeline states. */
+	/** Draws the circle using the engine-provided render states. */
 	void DrawShape(sf::RenderWindow& InWindow, const sf::RenderStates& InStates) override;
 
 private:
-	/** Core SFML geometric resource definition object. */
+	/** Underlying SFML circle shape. */
 	sf::CircleShape CircleShape;
 };

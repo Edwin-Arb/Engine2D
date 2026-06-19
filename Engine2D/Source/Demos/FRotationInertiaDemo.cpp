@@ -6,6 +6,7 @@
 
 void FRotationInertiaDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 {
+	// The demo needs both the square and the target circle to run.
 	if (!InContext.MainSquare || !InContext.MainCircle)
 	{
 		return;
@@ -21,16 +22,18 @@ void FRotationInertiaDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 	const float Dot = SquareForwardVector.DotProduct(ToCircle.Normalized());
 	const float Cross = SquareForwardVector.CrossProduct(ToCircle.Normalized());
 
+	// Signed angle error from forward to target drives an angular acceleration.
 	const float AngleError = std::atan2(Cross, Dot);
 	const float Steering = AngleError * TurnBoostFactor;
 
 	const float Power = 100.0f;
 	AngularVelocity += Steering * SquareRotationSpeed * Power * InDeltaTime;
 
-	// Frame-rate independent exponential decay formula calibration
+	// Apply damping scaled by the time step (referenced to 60 FPS) so it is frame-rate independent.
 	const float ActualDamping = std::pow(Damping, InDeltaTime * 60.0f);
 	AngularVelocity *= ActualDamping;
 
+	// Integrate angular velocity into the current angle.
 	float CurrentAngle = SquareRot;
 	CurrentAngle += AngularVelocity * InDeltaTime;
 

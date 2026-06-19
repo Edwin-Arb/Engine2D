@@ -6,28 +6,29 @@
 struct FDemoContext;
 
 /**
- * Interface class providing the core contract for distinct mathematics environment demos.
+ * Common interface for all interactive math demos.
+ * The game owns one instance per mode and drives them through this lifecycle.
  */
 class IMathDemo
 {
 public:
 	virtual ~IMathDemo() = default;
 
-	/** Triggered once immediately when transitioning into this specific demonstration scope. */
+	/** Called once when this demo becomes active (resets the scene to a known state). */
 	virtual void Enter(FDemoContext& InContext);
 
-	/** Execution tick evaluated once per frame to update underlying gameplay/math logic. */
+	/** Called every frame to update the demo's logic. */
 	virtual void Tick(float InDeltaTime, FDemoContext& InContext) = 0;
 
-	/** Input events handling pipeline dispatch hook. */
+	/** Optional hook to handle input events while this demo is active. */
 	virtual void HandleEvent(const sf::Event& InEvent, FDemoContext& InContext) {}
 
-	/** Custom rendering callback dedicated to scene overlay structures (rays, visual debug fields). */
+	/** Optional hook to draw debug overlays (rays, grids, cones) for this demo. */
 	virtual void Render(sf::RenderWindow& InWindow, const FMatrix3x3& InViewMatrix) {}
 
-	/** Triggered once immediately when swapping out from this active demonstration scope. */
+	/** Called once when switching away from this demo (undo any demo-specific state). */
 	virtual void Exit(FDemoContext& InContext) {}
 
-	/** Returns a unique name for the demo mode to be displayed in the HUD */
+	/** Returns the demo's display name, shown in the on-screen HUD. */
 	virtual std::string GetDemoName() const = 0;
 };

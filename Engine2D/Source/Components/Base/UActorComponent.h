@@ -22,11 +22,19 @@ public:
 	/** Called before the component is destroyed. */
 	virtual void UninitializeComponent() {}
 
+	/** Registers the component, firing OnRegister once (idempotent). */
 	void RegisterComponent();
+
+	/** Unregisters the component, firing OnUnregister once (idempotent). */
 	void UnregisterComponent();
+
+	/** Returns true if the component is currently registered with the world. */
 	bool IsRegistered() const { return bRegistered; }
 
+	/** Called once when gameplay starts for this component. */
 	virtual void BeginPlay() {}
+
+	/** Called once when gameplay ends for this component. */
 	virtual void EndPlay() {}
 
 	/**
@@ -41,15 +49,21 @@ public:
 	/** Returns a pointer to the Actor to which this component belongs */
 	AActor* GetOwner() const { return Owner; }
 
+	/** Tick configuration for this component (mirrors Unreal's tick function struct). */
 	struct FComponentTickFunction
 	{
+		/** When false, TickComponent is never called for this component. */
 		bool bCanEverTick = false;
 	};
 
+	/** Primary tick settings controlling whether this component ticks each frame. */
 	FComponentTickFunction PrimaryComponentTick;
 
 protected:
+	/** Hook called when the component is registered (override to join world systems). */
 	virtual void OnRegister() {}
+
+	/** Hook called when the component is unregistered (override to leave world systems). */
 	virtual void OnUnregister() {}
 
 	/** Pointer to the Owner Actor */
