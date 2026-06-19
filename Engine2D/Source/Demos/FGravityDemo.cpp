@@ -58,7 +58,7 @@ void FGravityDemo::Enter(FDemoContext& InContext)
 	AActor* ActorJupiter = InContext.World->SpawnActor("JupiterActor");
 	JupiterComponent = ActorJupiter->CreateComponent<UCircleRenderComponent>(JupiterRadius);
 	ActorJupiter->SetActorLocation({ SunComponent->GetComponentLocation().X + 350.0f, SunComponent->GetComponentLocation().Y });
-	JupiterComponent->SetColor(GRAY_COLOR);
+	JupiterComponent->SetColor(sf::Color::Red);
 
 	JupiterPhysicsComponent = ActorJupiter->CreateComponent<UPhysicsComponent>();
 	JupiterPhysicsComponent->SetLinearDamping(1.0f);

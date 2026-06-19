@@ -15,6 +15,7 @@
 #include "../Components/Render/USquareRenderComponent.h"
 #include "../Components/Render/UCircleRenderComponent.h"
 #include "../Demos/FGravityDemo.h"
+#include "../Demos/FSpringDemo.h"
 
 GameMain::GameMain()
 	: GlobalContext(&World)
@@ -87,6 +88,7 @@ GameMain::GameMain()
 	DemoRegistry.emplace(EMathDemo::EMD_Transform, std::make_unique<FTransformDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_CameraTransform, std::make_unique<FCameraTransformDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_Gravity, std::make_unique<FGravityDemo>());
+	DemoRegistry.emplace(EMathDemo::EMD_Spring, std::make_unique<FSpringDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_None, std::make_unique<FStartDemo>());
 
 	// Start on the "None"/start demo and cache its pointer as the active demo.
@@ -173,7 +175,7 @@ void GameMain::HandleInputSwitchMode()
 		if (CurrentMode >= static_cast<int32_t>(EMathDemo::EMD_None))
 		{
 			CurrentMode = 0;
-			static_assert(static_cast<int>(EMathDemo::EMD_None) == 9);
+			static_assert(static_cast<int>(EMathDemo::EMD_None) == 10);
 		}
 
 		ChangeMode(static_cast<EMathDemo>(CurrentMode));

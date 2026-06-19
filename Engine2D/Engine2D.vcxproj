@@ -186,6 +186,7 @@
     <ClCompile Include="Source\Demos\FDotProductDemo.cpp" />
     <ClCompile Include="Source\Demos\FFieldOfViewDemo.cpp" />
     <ClCompile Include="Source\Demos\FGravityDemo.cpp" />
+    <ClCompile Include="Source\Demos\FSpringDemo.cpp" />
     <ClCompile Include="Source\Demos\IMathDemo.cpp" />
     <ClCompile Include="Source\Demos\FReflectionDemo.cpp" />
     <ClCompile Include="Source\Demos\FRotationInertiaDemo.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="Source\Demos\FDotProductDemo.h" />
     <ClInclude Include="Source\Demos\FFieldOfViewDemo.h" />
     <ClInclude Include="Source\Demos\FGravityDemo.h" />
+    <ClInclude Include="Source\Demos\FSpringDemo.h" />
     <ClInclude Include="Source\Demos\IMathDemo.h" />
     <ClInclude Include="Source\Demos\FReflectionDemo.h" />
     <ClInclude Include="Source\Demos\FRotationInertiaDemo.h" />
