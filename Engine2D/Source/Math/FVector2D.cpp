@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include "FMath.h"
+
 FVector2D::FVector2D()
 	: X(0.0f)
 	, Y(0.0f)
@@ -61,21 +63,6 @@ float FVector2D::Angle(const FVector2D& InOther) const
 float FVector2D::Distance(const FVector2D& InA, const FVector2D& InB)
 {
 	return (InB - InA).Length();
-}
-
-float FVector2D::DegreeToRadian(float InDegree)
-{
-	return InDegree * PI / 180.0f;
-}
-
-float FVector2D::RadianToDegree(float InRadian)
-{
-	return InRadian * 180.0f / PI;
-}
-
-float FVector2D::Lerp(float InA, float InB, float InT)
-{
-	return InA + (InB - InA) * InT;
 }
 
 bool FVector2D::IsNearlyEqual(const FVector2D& InOther, float InEpsilon) const
@@ -219,13 +206,13 @@ FVector2D FVector2D::Normalized() const
 
 FVector2D FVector2D::GetForwardVector(float InAngleDegrees)
 {
-	const float AngleRadian = DegreeToRadian(InAngleDegrees);
+	const float AngleRadian = FMath::DegreeToRadian(InAngleDegrees);
 	return FVector2D(std::cos(AngleRadian), std::sin(AngleRadian));
 }
 
 FVector2D FVector2D::GetRightVector(float InAngleDegrees)
 {
-	const float AngleRadian = DegreeToRadian(InAngleDegrees);
+	const float AngleRadian = FMath::DegreeToRadian(InAngleDegrees);
 	return FVector2D(-std::sin(AngleRadian), std::cos(AngleRadian));
 }
 

@@ -6,6 +6,7 @@
 #include "../Core/FDemoContext.h"
 #include "../Components/Render/USquareRenderComponent.h"
 #include "../Core/UWorld.h"
+#include "../Math/FMath.h"
 
 void FTransformDemo::Enter(FDemoContext& InContext)
 {
@@ -71,7 +72,7 @@ void FTransformDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 		if (USceneComponent* Root = Actor->GetRootComponent())
 		{
 			float CurrentRelativeRot = Root->GetRelativeRotation();
-			float NewRelativeRot = FVector2D::Lerp(CurrentRelativeRot, CurrentParentRot, 10.0f * InDeltaTime);
+			float NewRelativeRot = FMath::Lerp(CurrentRelativeRot, CurrentParentRot, 10.0f * InDeltaTime);
 
 			Root->SetRelativeRotation(NewRelativeRot);
 

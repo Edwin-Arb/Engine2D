@@ -7,6 +7,18 @@
 #include <source_location>
 
 /**
+ * Marks a function as printf-like so GCC/Clang validate the format string against
+ * its arguments at compile time (e.g. "%i" with a float warns). No-op on MSVC.
+ * FmtArg is the 1-based index of the format-string parameter; FirstVararg is the
+ * 1-based index of the first variadic argument.
+ */
+#if defined(__GNUC__) || defined(__clang__)
+	#define ENGINE_PRINTF_LIKE(FmtArg, FirstVararg) __attribute__((format(printf, FmtArg, FirstVararg)))
+#else
+	#define ENGINE_PRINTF_LIKE(FmtArg, FirstVararg)
+#endif
+
+/**
  * Severity of a log message, ordered from most to least critical.
  *
  * The ordering mirrors Unreal's ELogVerbosity: a lower enumerator value means a
@@ -102,9 +114,24 @@ namespace EngineCore
 	 * @param Category       Channel the message belongs to.
 	 * @param Verbosity      Severity of the message.
 	 * @param Location       Describes the code location where the logging event occurred, typically capturing file, line, and function information.
-	 * @param FormattedText  Final message text, already expanded by std::format.
+	 * @param FormattedText  Final message text, already expanded by FormatLogMessage.
 	 */
 	void LogMessageImpl(const FLogCategory& Category, ELogVerbosity Verbosity, const std::source_location& Location, std::string_view FormattedText);
+
+	/**
+	 * Expands a printf-style format string and its arguments into a std::string.
+	 * Backs the UE_LOG and ensure*Msgf macros, which forward their format string
+	 * and arguments here.
+	 *
+	 * Uses the C printf family, so placeholders are %d, %i, %f, %s, ... and a
+	 * literal percent sign must be written as %%. The result buffer is sized
+	 * exactly by a measuring pass, so the message is never truncated.
+	 *
+	 * @param Format  printf-style format string.
+	 * @param ...     Arguments substituted into the format placeholders.
+	 * @return        The fully expanded message text.
+	 */
+	std::string FormatLogMessage(const char* Format, ...) ENGINE_PRINTF_LIKE(1, 2);
 
 	/**
 	 * Retunes a category's verbosity threshold at runtime. Afterwards the channel
@@ -145,12 +172,13 @@ namespace EngineCore
  * Primary logging entry point, modelled on Unreal Engine's UE_LOG.
  *
  * Example:
- *     UE_LOG(LogEngine, Warning, "Player '{}' took {} damage", PlayerName, Amount);
+ *     UE_LOG(LogTemp, Warning, "FloatTest: %i", NeighborCount);
+ *     UE_LOG(LogEngine, Warning, "Player '%s' took %d damage", PlayerName, Amount);
  *
  * @param Category   A category declared via DECLARE_LOG_CATEGORY_EXTERN (unquoted).
  * @param Verbosity  One of the ELogVerbosity enumerators (unquoted, e.g. Warning).
- * @param Format     A std::format format string - use {} placeholders, not %d.
- * @param ...        Arguments substituted into the {} placeholders.
+ * @param Format     A printf-style format string - use %d, %i, %f, %s; escape % as %%.
+ * @param ...        Arguments substituted into the format placeholders.
  */
 // clang-format off
 #define UE_LOG(Category, Verbosity, Format, ...) \
@@ -158,7 +186,7 @@ namespace EngineCore
 		Category, \
 		ELogVerbosity::Verbosity, \
 		std::source_location::current(), \
-		std::format(Format, ##__VA_ARGS__))
+		EngineCore::FormatLogMessage(Format, ##__VA_ARGS__))
 // clang-format on
 
 /**
@@ -187,7 +215,7 @@ namespace EngineCore
  * Each macro evaluates Expression exactly once and yields its bool result, so it
  * reads naturally as a guard:
  *     if (!ensure(Component != nullptr)) return;
- *     if (!ensureMsgf(Index < Count, "Index {} out of range {}", Index, Count)) return;
+ *     if (!ensureMsgf(Index < Count, "Index %d out of range %d", Index, Count)) return;
  *
  * On failure an Error line is logged (with the clickable call-site prefix) and,
  * if a debugger is attached, execution breaks right at the call site.
@@ -217,7 +245,7 @@ namespace EngineCore
 	}(std::source_location::current()))
 
 #define ensure(Expression)                  UE_PRIVATE_ENSURE_IMPL(Expression, false, std::string_view{})
-#define ensureMsgf(Expression, Format, ...) UE_PRIVATE_ENSURE_IMPL(Expression, false, std::format(Format, ##__VA_ARGS__))
+#define ensureMsgf(Expression, Format, ...) UE_PRIVATE_ENSURE_IMPL(Expression, false, EngineCore::FormatLogMessage(Format, ##__VA_ARGS__))
 #define ensureAlways(Expression)            UE_PRIVATE_ENSURE_IMPL(Expression, true,  std::string_view{})
-#define ensureAlwaysMsgf(Expression, Format, ...) UE_PRIVATE_ENSURE_IMPL(Expression, true, std::format(Format, ##__VA_ARGS__))
+#define ensureAlwaysMsgf(Expression, Format, ...) UE_PRIVATE_ENSURE_IMPL(Expression, true, EngineCore::FormatLogMessage(Format, ##__VA_ARGS__))
 // clang-format on

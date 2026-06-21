@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cstdarg>
+#include <cstdio>
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -90,6 +92,37 @@ namespace EngineCore
 			return Signature;
 		}
 	}  // namespace
+
+	std::string FormatLogMessage(const char* Format, ...)
+	{
+		// First pass: measure the exact length the formatted text needs.
+		va_list Args;
+		va_start(Args, Format);
+
+		va_list ArgsCopy;
+		va_copy(ArgsCopy, Args);
+
+		const int Size = std::vsnprintf(nullptr, 0, Format, Args);
+		va_end(Args);
+
+		// A negative result signals an encoding error; fall back to the raw format.
+		if (Size < 0)
+		{
+			va_end(ArgsCopy);
+			return std::string(Format);
+		}
+
+		// Second pass: render into a buffer sized to hold exactly Size characters
+		// (vsnprintf also writes the trailing null into the string's reserved slot).
+		std::string Result(static_cast<size_t>(Size), '\0');
+		if (Size > 0)
+		{
+			std::vsnprintf(Result.data(), static_cast<size_t>(Size) + 1, Format, ArgsCopy);
+		}
+		va_end(ArgsCopy);
+
+		return Result;
+	}
 
 	void LogMessageImpl(const FLogCategory& Category, ELogVerbosity Verbosity, const std::source_location& Location, std::string_view FormattedText)
 	{

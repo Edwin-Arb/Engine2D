@@ -1,5 +1,6 @@
 ﻿#include "GameMain.h"
 
+#include "../Math/FMath.h"
 #include "../Components/AActor.h"
 #include "../Components/Base/UPhysicsComponent.h"
 #include "../Components/Collisions/UCircleCollisionComponent.h"
@@ -14,6 +15,7 @@
 #include "../Demos/FTransformDemo.h"
 #include "../Components/Render/USquareRenderComponent.h"
 #include "../Components/Render/UCircleRenderComponent.h"
+#include "../Demos/FBoidsDemo.h"
 #include "../Demos/FGravityDemo.h"
 #include "../Demos/FSpringDemo.h"
 
@@ -89,6 +91,7 @@ GameMain::GameMain()
 	DemoRegistry.emplace(EMathDemo::EMD_CameraTransform, std::make_unique<FCameraTransformDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_Gravity, std::make_unique<FGravityDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_Spring, std::make_unique<FSpringDemo>());
+	DemoRegistry.emplace(EMathDemo::EMD_Boids, std::make_unique<FBoidsDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_None, std::make_unique<FStartDemo>());
 
 	// Start on the "None"/start demo and cache its pointer as the active demo.
@@ -144,7 +147,7 @@ void GameMain::HandleInput()
 
 		const FVector2D RotationDirection = FVector2D::Direction(SquarePos, CirclePos);
 		const float RadianAngleSquare = std::atan2(RotationDirection.Y, RotationDirection.X);
-		MainSquareComponent->SetRelativeRotation(FVector2D::RadianToDegree(RadianAngleSquare));
+		MainSquareComponent->SetRelativeRotation(FMath::RadianToDegree(RadianAngleSquare));
 	}
 }
 
@@ -175,7 +178,7 @@ void GameMain::HandleInputSwitchMode()
 		if (CurrentMode >= static_cast<int32_t>(EMathDemo::EMD_None))
 		{
 			CurrentMode = 0;
-			static_assert(static_cast<int>(EMathDemo::EMD_None) == 10);
+			static_assert(static_cast<int>(EMathDemo::EMD_None) == 11);
 		}
 
 		ChangeMode(static_cast<EMathDemo>(CurrentMode));

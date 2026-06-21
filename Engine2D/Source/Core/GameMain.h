@@ -25,6 +25,7 @@ enum class EMathDemo : int8_t
 	EMD_CameraTransform,
 	EMD_Gravity,
 	EMD_Spring,
+	EMD_Boids,
 	EMD_None
 };
 

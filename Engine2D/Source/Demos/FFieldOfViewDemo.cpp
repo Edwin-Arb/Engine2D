@@ -3,6 +3,7 @@
 #include "../Components/Render/UCircleRenderComponent.h"
 #include "../Components/Render/USquareRenderComponent.h"
 #include "../Core/FDemoContext.h"
+#include "../Math/FMath.h"
 #include <algorithm>
 
 void FFieldOfViewDemo::Tick(float InDeltaTime, FDemoContext& InContext)
@@ -39,11 +40,11 @@ void FFieldOfViewDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 		// Angle between the square's forward direction and the direction to the target center.
 		const float Dot = Forward.DotProduct(DirToCircle);
 		const float AngleToCenterRad = std::acos(std::clamp(Dot, -1.0f, 1.0f));
-		const float AngleToCenterDeg = FVector2D::RadianToDegree(AngleToCenterRad);
+		const float AngleToCenterDeg = FMath::RadianToDegree(AngleToCenterRad);
 
 		// The circle has an apparent angular radius; subtracting it lets an edge count as visible.
 		const float CircleAngularRadiusRad = std::asin(CIRCLE_RADIUS / Distance);
-		const float CircleAngularRadiusDeg = FVector2D::RadianToDegree(CircleAngularRadiusRad);
+		const float CircleAngularRadiusDeg = FMath::RadianToDegree(CircleAngularRadiusRad);
 
 		if (AngleToCenterDeg - CircleAngularRadiusDeg <= HalfFov)
 		{

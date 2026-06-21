@@ -2,6 +2,7 @@
 #include <cmath>
 
 #include "../../Core/Logging/FLog.h"
+#include "../../Math/FMath.h"
 
 USceneComponent::~USceneComponent()
 {
@@ -89,7 +90,7 @@ float USceneComponent::GetComponentRotation() const
 	const float M10 = WorldMatrix.Get(1, 0);
 
 	const float AngleRadians = std::atan2(M10, M00);
-	return FVector2D::RadianToDegree(AngleRadians);
+	return FMath::RadianToDegree(AngleRadians);
 }
 
 FVector2D USceneComponent::GetComponentScale() const

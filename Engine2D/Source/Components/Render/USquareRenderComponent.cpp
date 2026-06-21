@@ -1,6 +1,8 @@
 #include "USquareRenderComponent.h"
 #include <algorithm>
 
+#include "../../Math/FMath.h"
+
 USquareRenderComponent::USquareRenderComponent(const FVector2D& InSize)
 {
 	RectShape.setSize(InSize);
@@ -18,8 +20,8 @@ void USquareRenderComponent::SetColorFromFactor(float InValue)
 	// Remap the input from [-1, 1] into a [0, 1] alpha used to blend the two colors.
 	const float TimelineResult = std::clamp((InValue + Offset) * Scale, 0.0f, 1.0f);
 
-	const uint8_t Red = static_cast<uint8_t>(FVector2D::Lerp(255.0f, 0.0f, TimelineResult));
-	const uint8_t Green = static_cast<uint8_t>(FVector2D::Lerp(0.0f, 255.0f, TimelineResult));
+	const uint8_t Red = static_cast<uint8_t>(FMath::Lerp(255.0f, 0.0f, TimelineResult));
+	const uint8_t Green = static_cast<uint8_t>(FMath::Lerp(0.0f, 255.0f, TimelineResult));
 
 	RectShape.setFillColor(sf::Color(Red, Green, 100));
 }

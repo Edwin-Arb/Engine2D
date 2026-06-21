@@ -181,6 +181,7 @@
     <ClCompile Include="Source\Core\UWorld.cpp" />
     <ClCompile Include="Source\Core\Logging\FLog.cpp" />
     <ClCompile Include="Source\Core\Main.cpp" />
+    <ClCompile Include="Source\Demos\FBoidsDemo.cpp" />
     <ClCompile Include="Source\Demos\FCameraTransformDemo.cpp" />
     <ClCompile Include="Source\Demos\FCrossProductDemo.cpp" />
     <ClCompile Include="Source\Demos\FDotProductDemo.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="Source\Demos\FSteeringDemo.cpp" />
     <ClCompile Include="Source\Demos\FTransformDemo.cpp" />
     <ClCompile Include="Source\Math\FCamera.cpp" />
+    <ClCompile Include="Source\Math\FMath.cpp" />
     <ClCompile Include="Source\Math\FMatrix3x3.cpp" />
     <ClCompile Include="Source\Math\FTransform2D.cpp" />
     <ClCompile Include="Source\Math\FVector2D.cpp" />
@@ -213,6 +215,7 @@
     <ClInclude Include="Source\Core\GameMain.h" />
     <ClInclude Include="Source\Core\UWorld.h" />
     <ClInclude Include="Source\Core\Logging\FLog.h" />
+    <ClInclude Include="Source\Demos\FBoidsDemo.h" />
     <ClInclude Include="Source\Demos\FCameraTransformDemo.h" />
     <ClInclude Include="Source\Demos\FCrossProductDemo.h" />
     <ClInclude Include="Source\Demos\FDotProductDemo.h" />
@@ -226,6 +229,7 @@
     <ClInclude Include="Source\Demos\FSteeringDemo.h" />
     <ClInclude Include="Source\Demos\FTransformDemo.h" />
     <ClInclude Include="Source\Math\FCamera.h" />
+    <ClInclude Include="Source\Math\FMath.h" />
     <ClInclude Include="Source\Math\FMatrix3x3.h" />
     <ClInclude Include="Source\Math\FTransform2D.h" />
     <ClInclude Include="Source\Math\FVector2D.h" />

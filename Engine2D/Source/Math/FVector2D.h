@@ -94,15 +94,6 @@ public:
 	/** Calculates the Euclidean distance between two points. */
 	static float Distance(const FVector2D& InA, const FVector2D& InB);
 
-	/** Converts an angle from degrees to radians. */
-	static float DegreeToRadian(float InDegree);
-
-	/** Converts an angle from radians to degrees. */
-	static float RadianToDegree(float InRadian);
-
-	/** Linearly interpolates between two float values based on an alpha factor. */
-	static float Lerp(float InA, float InB, float InT);
-
 	/** Generates a direction vector pointing forward based on an orientation angle. */
 	static FVector2D GetForwardVector(float InAngleDegrees);
 

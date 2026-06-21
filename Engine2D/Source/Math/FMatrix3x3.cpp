@@ -1,6 +1,8 @@
 #include "FMatrix3x3.h"
 #include <cmath>
 
+#include "FMath.h"
+
 FMatrix3x3::FMatrix3x3()
 {
 	// Identity Matrix configuration
@@ -24,7 +26,7 @@ FMatrix3x3 FMatrix3x3::CreateTranslation(const FVector2D& InPosition)
 FMatrix3x3 FMatrix3x3::CreateRotation(float InAngleDegrees)
 {
 	FMatrix3x3 Result;
-	const float AngleRad = FVector2D::DegreeToRadian(InAngleDegrees);
+	const float AngleRad = FMath::DegreeToRadian(InAngleDegrees);
 
 	const float Cos = std::cos(AngleRad);
 	const float Sin = std::sin(AngleRad);

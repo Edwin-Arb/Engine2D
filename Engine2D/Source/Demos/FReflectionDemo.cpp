@@ -8,6 +8,7 @@
 #include "../Components/Render/UCircleRenderComponent.h"
 #include "../Components/Render/USquareRenderComponent.h"
 #include "../Core/FDemoContext.h"
+#include "../Math/FMath.h"
 
 void FReflectionDemo::Enter(FDemoContext& InContext)
 {
@@ -88,7 +89,7 @@ void FReflectionDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 	// Cache the dot product and incidence angle for the on-screen HUD.
 	SavedDotProduct = SavedIncidentRay.DotProduct(SavedReflectionNormal);
 	const float AngleWithNormal = std::acos(std::clamp(std::abs(SavedDotProduct), 0.0f, 1.0f));
-	SavedIncidenceAngle = 90.0f - FVector2D::RadianToDegree(AngleWithNormal);
+	SavedIncidenceAngle = 90.0f - FMath::RadianToDegree(AngleWithNormal);
 }
 
 void FReflectionDemo::Render(sf::RenderWindow& InWindow, const FMatrix3x3& InViewMatrix)
