@@ -40,7 +40,6 @@ void FLinesDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 	FVector2D Sum = A + B;
 
 	// --- Begin a grab: on a fresh press, grab whichever handle is under the cursor ---
-	// Each test uses the EXACT point drawn as that handle, so "what you see is what you grab".
 	if (Grabbed == EGrabbedVector::EGV_None && bMouseDown)
 	{
 		if ((PointA - MousePos).Length() <= GrabRadius)
@@ -91,8 +90,8 @@ void FLinesDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 		}
 	}
 
-	// A drag above may have moved a point, so recompute before drawing. This keeps the arrows
-	// and the handle markers in sync within the same frame (no one-frame lag).
+	// A drag above may have moved a point, so recompute before drawing - keeps the arrows and
+	// the handle markers in sync within the same frame (no one-frame lag).
 	A = PointA - Origin;
 	B = PointB - Origin;
 	Sum = A + B;
@@ -100,6 +99,7 @@ void FLinesDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 	constexpr sf::Color ColorA = sf::Color::Cyan;
 	constexpr sf::Color ColorB = sf::Color(255, 140, 0);  // orange
 	constexpr sf::Color ColorSum = sf::Color::Green;
+	constexpr sf::Color ColorPerp = sf::Color::Magenta;
 
 	// The two vectors A and B, both drawn from the shared origin.
 	DebugDraw.AddArrow(Origin, A, ColorA);
@@ -112,6 +112,11 @@ void FLinesDemo::Tick(float InDeltaTime, FDemoContext& InContext)
 
 	// The result A + B: from the origin straight to that far corner.
 	DebugDraw.AddArrow(Origin, Sum, ColorSum);
+
+	// Perpendiculars of A: a 90-degree turn keeps the length but swaps the components and flips
+	// one sign. There are two of them (left and right): (-y, x) and (y, -x).
+	DebugDraw.AddArrow(Origin, FVector2D(-A.Y, A.X), ColorPerp);
+	DebugDraw.AddArrow(Origin, FVector2D(A.Y, -A.X), ColorPerp);
 
 	// Handle markers (all draggable): yellow on A's & B's tips, white on the origin, green on the sum tip.
 	DebugDraw.AddCircle(PointA, MarkerRadius, sf::Color::Yellow);

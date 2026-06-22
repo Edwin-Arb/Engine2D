@@ -3,7 +3,7 @@
 #include "IMathDemo.h"
 #include "../Core/FDebugDraw.h"
 
-/** Which draggable handle of the vector-addition diagram the mouse is currently holding. */
+/** Which draggable handle of the diagram the mouse is currently holding. */
 enum class EGrabbedVector : uint8_t
 {
 	EGV_VectorA,	   // tip of A
@@ -14,10 +14,10 @@ enum class EGrabbedVector : uint8_t
 };
 
 /**
- * Vector-addition playground. Two vectors A and B share a common origin, and you can drag
- * four handles: the tip of A, the tip of B, the origin, or the tip of the sum. The diagram
- * draws A, B, their sum A + B, and the full parallelogram (each vector copied tip-to-tail
- * from the other's end), so "adding vectors" becomes something you can see, not just compute.
+ * Vector playground. Two vectors A and B share a common origin; you can drag the tip of A,
+ * the tip of B, the origin, or the tip of the sum. The demo draws A, B, their sum A + B with
+ * the full parallelogram, plus the perpendicular of A - so vector addition and the 90-degree
+ * turn become things you can see, not just compute.
  *
  * Handle behaviour: dragging A's / B's tip changes that vector; dragging the origin keeps the
  * tips fixed so A and B (= tip - origin) restretch; dragging the sum's tip moves A so that
