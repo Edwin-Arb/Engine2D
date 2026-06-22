@@ -2,23 +2,25 @@
 
 #include "../Math/FMath.h"
 #include "../Components/AActor.h"
-#include "../Components/Base/UPhysicsComponent.h"
-#include "../Components/Collisions/UCircleCollisionComponent.h"
-#include "../Demos/FCameraTransformDemo.h"
-#include "../Demos/FCrossProductDemo.h"
-#include "../Demos/FDotProductDemo.h"
-#include "../Demos/FFieldOfViewDemo.h"
-#include "../Demos/FReflectionDemo.h"
-#include "../Demos/FRotationInertiaDemo.h"
-#include "../Demos/FStartDemo.h"
-#include "../Demos/FSteeringDemo.h"
-#include "../Demos/FTransformDemo.h"
 #include "../Components/Render/USquareRenderComponent.h"
 #include "../Components/Render/UCircleRenderComponent.h"
-#include "../Demos/FBoidsDemo.h"
+#include "../Components/Base/UPhysicsComponent.h"
+#include "../Components/Collisions/UCircleCollisionComponent.h"
+
+#include "../Demos/FDotProductDemo.h"
+#include "../Demos/FCrossProductDemo.h"
+#include "../Demos/FSteeringDemo.h"
+#include "../Demos/FRotationInertiaDemo.h"
+#include "../Demos/FFieldOfViewDemo.h"
+#include "../Demos/FReflectionDemo.h"
+#include "../Demos/FTransformDemo.h"
+#include "../Demos/FCameraTransformDemo.h"
 #include "../Demos/FGravityDemo.h"
-#include "../Demos/FLinesDemo.h"
 #include "../Demos/FSpringDemo.h"
+#include "../Demos/FBoidsDemo.h"
+#include "../Demos/FLinesDemo.h"
+#include "../Demos/FMatrixDemo.h"
+#include "../Demos/FStartDemo.h"
 
 GameMain::GameMain()
 	: GlobalContext(&World)
@@ -94,6 +96,7 @@ GameMain::GameMain()
 	DemoRegistry.emplace(EMathDemo::EMD_Spring, std::make_unique<FSpringDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_Boids, std::make_unique<FBoidsDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_Lines, std::make_unique<FLinesDemo>());
+	DemoRegistry.emplace(EMathDemo::EMD_Matrix, std::make_unique<FMatrixDemo>());
 	DemoRegistry.emplace(EMathDemo::EMD_None, std::make_unique<FStartDemo>());
 
 	// Start on the "None"/start demo and cache its pointer as the active demo.
@@ -180,7 +183,7 @@ void GameMain::HandleInputSwitchMode()
 		if (CurrentMode >= static_cast<int32_t>(EMathDemo::EMD_None))
 		{
 			CurrentMode = 0;
-			static_assert(static_cast<int>(EMathDemo::EMD_None) == 12);
+			static_assert(static_cast<int>(EMathDemo::EMD_None) == 13);
 		}
 
 		ChangeMode(static_cast<EMathDemo>(CurrentMode));
@@ -342,7 +345,6 @@ void GameMain::Update(const sf::RenderWindow& InWindow, float InDeltaTime)
 
 		if (bHitWall)
 		{
-			// MainSquarePhysicsComponent->SetVelocity({ 0.0f, 0.0f });
 			MainSquareComponent->SetWorldLocation(Pos);
 		}
 	}
