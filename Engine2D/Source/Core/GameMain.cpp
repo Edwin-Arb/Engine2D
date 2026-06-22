@@ -275,7 +275,9 @@ void GameMain::Update(const sf::RenderWindow& InWindow, float InDeltaTime)
 	World.Tick(InDeltaTime);
 
 	// ===== Collision resolution: player square vs. target circle =================
-	if (MainSquareCollisionComponent && MainCircleCollisionComponent)
+	// Skip entirely for demos that opt out (e.g. the pure rotation / steering demos).
+	const bool bResolveCollision = (!ActiveDemo || ActiveDemo->UsesCollision());
+	if (bResolveCollision && MainSquareCollisionComponent && MainCircleCollisionComponent)
 	{
 		FVector2D CollisionNormal;
 		float PenetrationDepth = 0.0f;

@@ -11,6 +11,9 @@ public:
 	void Tick(float InDeltaTime, FDemoContext& InContext) override;
 	std::string GetDemoName() const override { return "Steering Demo | Smooth Rotation Towards Target"; }
 
+	/** Disabled: this demo only rotates the square in place, so collision response would just get in the way. */
+	bool UsesCollision() const override { return false; }
+
 private:
 	/** Multiplier on the angle error: higher turns more aggressively toward the target. */
 	const float TurnBoostFactor = 5.0f;

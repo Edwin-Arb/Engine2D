@@ -29,6 +29,13 @@ public:
 	/** Called once when switching away from this demo (undo any demo-specific state). */
 	virtual void Exit(FDemoContext& InContext) {}
 
+	/**
+	 * Whether the shared player-square vs target-circle collision resolution should run while
+	 * this demo is active. Demos that only rotate or steer the square return false, so the square
+	 * can pass over the target without bouncing - keeping the motion clean and easy to read.
+	 */
+	virtual bool UsesCollision() const { return true; }
+
 	/** Returns the demo's display name, shown in the on-screen HUD. */
 	virtual std::string GetDemoName() const = 0;
 };

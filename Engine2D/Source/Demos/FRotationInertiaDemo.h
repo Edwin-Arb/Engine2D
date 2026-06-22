@@ -12,6 +12,9 @@ public:
 	void Tick(float InDeltaTime, FDemoContext& InContext) override;
 	std::string GetDemoName() const override { return "Rotation Inertia Demo | Angular Velocity & Damping"; }
 
+	/** Disabled: this demo only spins the square in place, so collision response would just get in the way. */
+	bool UsesCollision() const override { return false; }
+
 private:
 	/** Per-second fraction of angular velocity retained (0.8 = loses 20% each reference frame). */
 	const float Damping = 0.80f;
