@@ -2,6 +2,11 @@
 #include <cstdint>
 #include <random>
 
+namespace sf
+{
+	class Color;
+}
+
 /**
  * Static library of general-purpose math utilities, in the spirit of Unreal's FMath.
  * Holds scalar helpers (interpolation, angle conversion) and random-number generation
@@ -32,6 +37,8 @@ public:
 
 	/** Returns a random float in the range [0, 1]. */
 	static float FRand();
+
+	static sf::Color RandomColor();
 
 private:
 	/** Shared Mersenne Twister generator, seeded once on first use. */

@@ -176,6 +176,7 @@
     <ClCompile Include="Source\Components\Collisions\UCircleCollisionComponent.cpp" />
     <ClCompile Include="Source\Components\Render\UCircleRenderComponent.cpp" />
     <ClCompile Include="Source\Components\Render\USquareRenderComponent.cpp" />
+    <ClCompile Include="Source\Core\FDebugDraw.cpp" />
     <ClCompile Include="Source\Core\FDemoContext.cpp" />
     <ClCompile Include="Source\Core\GameMain.cpp" />
     <ClCompile Include="Source\Core\UWorld.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="Source\Demos\FDotProductDemo.cpp" />
     <ClCompile Include="Source\Demos\FFieldOfViewDemo.cpp" />
     <ClCompile Include="Source\Demos\FGravityDemo.cpp" />
+    <ClCompile Include="Source\Demos\FLinesDemo.cpp" />
     <ClCompile Include="Source\Demos\FSpringDemo.cpp" />
     <ClCompile Include="Source\Demos\IMathDemo.cpp" />
     <ClCompile Include="Source\Demos\FReflectionDemo.cpp" />
@@ -211,6 +213,7 @@
     <ClInclude Include="Source\Components\Render\UCircleRenderComponent.h" />
     <ClInclude Include="Source\Components\Render\USquareRenderComponent.h" />
     <ClInclude Include="Source\Core\Constants.h" />
+    <ClInclude Include="Source\Core\FDebugDraw.h" />
     <ClInclude Include="Source\Core\FDemoContext.h" />
     <ClInclude Include="Source\Core\GameMain.h" />
     <ClInclude Include="Source\Core\UWorld.h" />
@@ -221,6 +224,7 @@
     <ClInclude Include="Source\Demos\FDotProductDemo.h" />
     <ClInclude Include="Source\Demos\FFieldOfViewDemo.h" />
     <ClInclude Include="Source\Demos\FGravityDemo.h" />
+    <ClInclude Include="Source\Demos\FLinesDemo.h" />
     <ClInclude Include="Source\Demos\FSpringDemo.h" />
     <ClInclude Include="Source\Demos\IMathDemo.h" />
     <ClInclude Include="Source\Demos\FReflectionDemo.h" />

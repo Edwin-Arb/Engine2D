@@ -26,6 +26,7 @@ enum class EMathDemo : int8_t
 	EMD_Gravity,
 	EMD_Spring,
 	EMD_Boids,
+	EMD_Lines,
 	EMD_None
 };
 

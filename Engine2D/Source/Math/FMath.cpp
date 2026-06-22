@@ -1,5 +1,7 @@
 #include "FMath.h"
 
+#include <SFML/Graphics/Color.hpp>
+
 #include "../Core/Constants.h"
 
 float FMath::Lerp(float InA, float InB, float InT)
@@ -22,6 +24,15 @@ float FMath::FRand()
 	// Distribution is reused across calls; only the generator carries state.
 	static std::uniform_real_distribution<float> Dist(0.f, 1.f);
 	return Dist(GetGenerator());
+}
+
+sf::Color FMath::RandomColor()
+{
+	uint8_t R = static_cast<uint8_t>(RandRange(0, 255));
+	uint8_t G = static_cast<uint8_t>(RandRange(0, 255));
+	uint8_t B = static_cast<uint8_t>(RandRange(0, 255));
+
+	return sf::Color(R, G, B);
 }
 
 float FMath::FRandRange(float Min, float Max)
