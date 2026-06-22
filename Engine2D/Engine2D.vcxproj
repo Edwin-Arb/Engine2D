@@ -241,7 +241,7 @@
     <ClInclude Include="Source\Math\FVector2D.h" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".clang-format" />
+    <Content Include="..\.clang-format" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
